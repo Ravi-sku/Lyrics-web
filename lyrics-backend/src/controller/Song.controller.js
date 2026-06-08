@@ -3,7 +3,13 @@ const songModel=require('../models/songModel')
 const makeSlug = require('../utils/slug')
 
 async  function AddSong(req,res){
-    const admin=await authmodel.findOne(req.email)
+
+    if(req.user.role !=='admin'){
+     return res.status(403).json({
+         success:false,
+         message:"Access denied"
+      })
+    }
     const { title,artist,lyrics,album,language }=req.body
     if(!title || !artist || !lyrics){
         return res.status(400).json({
